@@ -1,14 +1,68 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+//! Deserialization/Serialization of JWS for JWT.
+//!
+//! # Example
+//!
+//! ```rust
+//!
+//! use serde_jwt::prelude::*;
+//! use serde::Deserialize;
+//! use serde::de::{value, IntoDeserializer};
+//! use std::borrow::Cow;
+//!
+//! type Token = Jwt<Claims, Header>;
+//!
+//! #[derive(Deserialize)]
+//! struct Header {
+//!     #[serde(alias = "alg")]
+//!     algorithm: Algorithm
+//! }
+//!
+//! #[derive(Deserialize)]
+//! pub struct Claims {
+//!     #[serde(alias = "aud")]
+//!     client_id: String,
+//!     #[serde(alias = "iss")]
+//!     issuer: String,
+//!     #[serde(alias = "sub")]
+//!     user_id: String,
+//! }
+//!
+//! fn decode(input: &str) -> Result<(Jws, Token), value::Error> {
+//!
+//!     let jws : Jws;
+//!     let jwt : Token;
+//!
+//!     {
+//!         let de = input.into_deserializer();
+//!         jws = Jws::deserialize(de)?;
+//!     }
+//!
+//!     {
+//!         let encoded_token : Cow<str> = jws.encoded_token();
+//!         let de = encoded_token.as_ref().into_deserializer();
+//!
+//!         jwt = Token::deserialize(de)?;
+//!     }
+//!
+//!     Ok((jws, jwt))
+//! }
+//!
+//! let valid_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30";
+//!
+//! let (jws, jwt) = decode(&valid_token).unwrap();
+//!
+//! let signature : Cow<[u8]> = jws.signature();
+//!
+//! let claims : Claims = jwt.claims();
+//! let header : Header = jwt.header();
+//! ```
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+pub mod algorithm;
+pub mod error;
+pub mod jws;
+pub mod jwt;
+pub mod numeric_date;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+pub mod prelude {
+    pub use crate::{algorithm::Algorithm, jws::Jws, jwt::Jwt, numeric_date::NumericDate};
 }

@@ -4,3 +4,25 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+
+[dependencies.base64ct]
+features = ["std"]
+version = "1.8.0"
+
+[dependencies.serde]
+features = ["derive"]
+version = "1.0.219"
+
+[dependencies.serde_json]
+version = "1.0.142"
+
+[dev-dependencies]
+
+[dev-dependencies.hmac]
+version = "0.12.1"
+
+[dev-dependencies.sha2]
+version = "0.10.9"
+
+[dev-dependencies.serde_test]
+version = "1.0.177"
