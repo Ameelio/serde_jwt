@@ -1,7 +1,7 @@
 use base64ct::{Base64UrlUnpadded, Encoding};
 use serde::{
     Deserialize, Serialize,
-    de::{self, value::SeqDeserializer},
+    de::{self, IntoDeserializer, value::SeqDeserializer},
 };
 use std::{borrow::Cow, fmt};
 
@@ -106,6 +106,16 @@ impl Serialize for Jws {
         let enc_token: Cow<str> = self.encoded_token();
 
         serializer.collect_str(&format_args!("{}.{}", enc_token, enc_signature))
+    }
+}
+
+impl TryFrom<&str> for Jws {
+    type Error = de::value::Error;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        let de = value.into_deserializer();
+
+        Self::deserialize(de)
     }
 }
 

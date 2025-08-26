@@ -19,10 +19,6 @@
 //!
 //! #[derive(Deserialize)]
 //! pub struct Claims {
-//!     #[serde(alias = "aud")]
-//!     client_id: String,
-//!     #[serde(alias = "iss")]
-//!     issuer: String,
 //!     #[serde(alias = "sub")]
 //!     user_id: String,
 //! }
@@ -53,8 +49,8 @@
 //!
 //! let signature : Cow<[u8]> = jws.signature();
 //!
-//! let claims : Claims = jwt.claims();
-//! let header : Header = jwt.header();
+//! let claims : &Claims = jwt.claims();
+//! let header : &Header = jwt.header();
 //! ```
 
 pub mod algorithm;
