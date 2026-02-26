@@ -58,6 +58,7 @@ pub mod error;
 pub mod jws;
 pub mod jwt;
 pub mod numeric_date;
+pub mod util;
 
 pub mod prelude {
     pub use crate::{algorithm::Algorithm, jws::Jws, jwt::Jwt, numeric_date::NumericDate};
