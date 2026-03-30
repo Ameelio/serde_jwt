@@ -17,7 +17,8 @@ use encoded_field::EncodedField;
 /// The JSON Web Token
 /// This uses generics, for the claims and header, all that is required is that they are structs which implement [Deserialize](https://serde.rs/).
 /// See: [What is a JSON Web Token](https://www.jwt.io/introduction#what-is-json-web-token)
-#[derive(Debug, PartialEq)]
+#[derive(PartialEq)]
+#[cfg_attr(feature = "debug", derive(Debug))]
 pub struct Jwt<C, H> {
     claims: C,
     header: H,
@@ -159,6 +160,7 @@ mod test {
         issued_at: time::Duration,
     }
 
+    #[cfg(feature = "debug")]
     #[test]
     fn test_ser_de() {
         let header = TestHeader {

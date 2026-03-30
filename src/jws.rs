@@ -12,12 +12,14 @@ use encoded_token::EncodedToken;
 use signature::Signature;
 
 /// JSON Web Signature.
+#[cfg_attr(feature = "debug", derive(Debug))]
 pub struct Jws {
     encoded_token: EncodedToken,
     signature: Signature,
 }
 
 impl Jws {
+    #[cfg_attr(feature = "debug", tracing::instrument)]
     pub fn new(encoded_token: &str, signature: &[u8]) -> Self {
         let encoded_token = EncodedToken::from(encoded_token);
         let signature = Signature::from(signature);

@@ -2,7 +2,7 @@ use std::{fmt, ops::Deref};
 
 use serde::{Deserialize, Serialize, de};
 
-#[derive(Clone, Serialize)]
+#[derive(Clone, Debug, Serialize)]
 pub struct EncodedToken(pub Box<str>);
 
 impl Deref for EncodedToken {
