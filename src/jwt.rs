@@ -1,23 +1,23 @@
-use base64ct::{Base64UrlUnpadded, Encoding};
-use serde::{
-    de::{
-        self, Deserialize, DeserializeOwned, Deserializer, IntoDeserializer, value::SeqDeserializer,
-    },
-    ser::{self, Serialize, Serializer},
-};
-use std::{
-    fmt::{self, Formatter},
-    marker::PhantomData,
-};
-
 mod encoded_field;
+
+use std::fmt;
+use std::marker::PhantomData;
+
+use base64ct::{Base64UrlUnpadded, Encoding};
+use serde::de::IntoDeserializer;
+use serde::de::value::SeqDeserializer;
+use serde::{Deserialize, Serialize, de, ser};
+
+use crate::error::Error;
+use crate::ser::Serializer;
 
 use encoded_field::EncodedField;
 
 /// The JSON Web Token
 /// This uses generics, for the claims and header, all that is required is that they are structs which implement [Deserialize](https://serde.rs/).
 /// See: [What is a JSON Web Token](https://www.jwt.io/introduction#what-is-json-web-token)
-#[derive(Debug, PartialEq)]
+#[derive(PartialEq)]
+#[cfg_attr(feature = "debug", derive(Debug))]
 pub struct Jwt<C, H> {
     claims: C,
     header: H,
@@ -25,43 +25,57 @@ pub struct Jwt<C, H> {
 
 impl<C, H> Jwt<C, H>
 where
-    C: DeserializeOwned + Sized,
-    H: DeserializeOwned + Sized,
+    C: de::DeserializeOwned + Sized,
+    H: de::DeserializeOwned + Sized,
 {
     pub fn new(claims: C, header: H) -> Self {
         Self { claims, header }
     }
 
     pub fn claims(&self) -> &C {
-        let claims = &self.claims;
-        claims
+        &self.claims
     }
 
     pub fn header(&self) -> &H {
-        let header = &self.header;
-        header
+        &self.header
+    }
+}
+
+impl<Claims, Header> Jwt<Claims, Header>
+where
+    Claims: Serialize,
+    Header: Serialize,
+{
+    pub fn to_string(&self) -> Result<String, Error> {
+        let mut serializer = Serializer {
+            output: String::new(),
+        };
+
+        self.serialize(&mut serializer)?;
+
+        Ok(serializer.output)
     }
 }
 
 impl<'de, C, H> Deserialize<'de> for Jwt<C, H>
 where
-    C: DeserializeOwned,
-    H: DeserializeOwned,
+    C: de::DeserializeOwned,
+    H: de::DeserializeOwned,
 {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
-        D: Deserializer<'de>,
+        D: de::Deserializer<'de>,
     {
         struct Visitor<C, H>(PhantomData<(C, H)>);
 
         impl<'de, C, H> de::Visitor<'de> for Visitor<C, H>
         where
-            C: DeserializeOwned,
-            H: DeserializeOwned,
+            C: de::DeserializeOwned,
+            H: de::DeserializeOwned,
         {
             type Value = Jwt<C, H>;
 
-            fn expecting(&self, formatter: &mut Formatter) -> fmt::Result {
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
                 formatter.write_str("Expecting base64 encoded strings joined with a '.'")
             }
 
@@ -104,27 +118,36 @@ where
 {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
-        S: Serializer,
+        S: ser::Serializer,
     {
         // NOTE: Its possible there may be some optimization writing a base64 serializer
         // so I can then have serde transcode from json to base64 without allocating as
         // much.
-        let ser_claims: Vec<u8> = serde_json::to_vec(&self.claims).map_err(ser::Error::custom)?;
-        let ser_header: Vec<u8> = serde_json::to_vec(&self.header).map_err(ser::Error::custom)?;
 
-        let enc_claims: String = Base64UrlUnpadded::encode_string(&ser_claims);
-        let enc_header: String = Base64UrlUnpadded::encode_string(&ser_header);
+        let ser_claims: String = {
+            let ser_claims: Vec<u8> =
+                serde_json::to_vec(&self.claims).map_err(ser::Error::custom)?;
 
-        serializer.collect_str(&format_args!("{}.{}", enc_header, enc_claims))
+            Base64UrlUnpadded::encode_string(&ser_claims)
+        };
+
+        let ser_header: String = {
+            let ser_header: Vec<u8> =
+                serde_json::to_vec(&self.header).map_err(ser::Error::custom)?;
+
+            Base64UrlUnpadded::encode_string(&ser_header)
+        };
+
+        serializer.collect_str(&format_args!("{}.{}", ser_header, ser_claims))
     }
 }
 
 impl<C, H> TryFrom<&str> for Jwt<C, H>
 where
-    C: DeserializeOwned,
-    H: DeserializeOwned,
+    C: de::DeserializeOwned,
+    H: de::DeserializeOwned,
 {
-    type Error = de::value::Error;
+    type Error = Error;
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         let de = value.into_deserializer();
@@ -159,6 +182,7 @@ mod test {
         issued_at: time::Duration,
     }
 
+    #[cfg(feature = "debug")]
     #[test]
     fn test_ser_de() {
         let header = TestHeader {

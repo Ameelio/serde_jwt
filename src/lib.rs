@@ -1,10 +1,17 @@
 //! Deserialization/Serialization of JWS for JWT.
 //!
+//! This crate provides structs and ser(de) for json web tokens and
+//! json web signatures.
+//!
+//! It does not supply signature verification, this allows you to choose
+//! and maintain the specific algorithm libraries that handle signature
+//! verification.
+//!
 //! # Example
 //!
 //! ```rust
 //!
-//! use serde_jwt::prelude::*;
+//! use json_web_token::prelude::*;
 //! use serde::Deserialize;
 //! use serde::de::{value, IntoDeserializer};
 //! use std::borrow::Cow;
@@ -58,6 +65,8 @@ pub mod error;
 pub mod jws;
 pub mod jwt;
 pub mod numeric_date;
+pub mod ser;
+pub mod util;
 
 pub mod prelude {
     pub use crate::{algorithm::Algorithm, jws::Jws, jwt::Jwt, numeric_date::NumericDate};

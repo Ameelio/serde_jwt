@@ -11,13 +11,18 @@ mod signature;
 use encoded_token::EncodedToken;
 use signature::Signature;
 
+use crate::error::Error;
+use crate::ser::Serializer;
+
 /// JSON Web Signature.
+#[cfg_attr(feature = "debug", derive(Debug))]
 pub struct Jws {
     encoded_token: EncodedToken,
     signature: Signature,
 }
 
 impl Jws {
+    #[cfg_attr(feature = "debug", tracing::instrument)]
     pub fn new(encoded_token: &str, signature: &[u8]) -> Self {
         let encoded_token = EncodedToken::from(encoded_token);
         let signature = Signature::from(signature);
@@ -42,6 +47,16 @@ impl Jws {
         let ptr: &[u8] = self.signature.as_ref();
 
         Cow::from(ptr)
+    }
+
+    pub fn to_string(&self) -> Result<String, Error> {
+        let mut serializer = Serializer {
+            output: String::new(),
+        };
+
+        self.serialize(&mut serializer)?;
+
+        Ok(serializer.output)
     }
 }
 
@@ -101,16 +116,20 @@ impl Serialize for Jws {
     where
         S: serde::Serializer,
     {
-        let enc_signature: String = Base64UrlUnpadded::encode_string(self.signature.as_ref());
-
         let enc_token: Cow<str> = self.encoded_token();
 
-        serializer.collect_str(&format_args!("{}.{}", enc_token, enc_signature))
+        let signature: String = {
+            let signature: Cow<[u8]> = self.signature();
+
+            Base64UrlUnpadded::encode_string(&signature)
+        };
+
+        serializer.collect_str(&format_args!("{}.{}", enc_token, signature))
     }
 }
 
 impl TryFrom<&str> for Jws {
-    type Error = de::value::Error;
+    type Error = Error;
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         let de = value.into_deserializer();

@@ -2,6 +2,7 @@ use base64ct::{Base64UrlUnpadded, Encoding};
 use serde::{Deserialize, de};
 use std::fmt;
 
+#[derive(Debug)]
 pub struct Signature(pub Box<[u8]>);
 
 impl AsRef<[u8]> for Signature {
