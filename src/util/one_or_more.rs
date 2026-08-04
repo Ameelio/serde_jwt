@@ -45,8 +45,8 @@ impl<'a> Iterator for OneOrMoreIterator<'a> {
 
         if self.index < len {
             let result: Self::Item = match self.inner {
-                OneOrMore::One(one) => &one,
-                OneOrMore::More(more) => (&more[self.index]).as_ref(),
+                OneOrMore::One(one) => one,
+                OneOrMore::More(more) => (more[self.index]).as_ref(),
             };
 
             self.index += 1;

@@ -31,7 +31,7 @@ pub enum Algorithm {
     /// No digital signature or MAC
     None,
 }
-
+#[allow(clippy::len_without_is_empty)]
 impl Algorithm {
     pub fn len(&self) -> usize {
         match self {

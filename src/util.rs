@@ -8,7 +8,7 @@
 //! This is a common claim representation, `aud` for example.
 //!
 //! ## Example
-//!     use serde_jwt::util::OneOrMore;
+//!     use json_web_token::util::OneOrMore;
 //!     use serde::{Deserialize, Serialize};
 //!     use serde_json::json;
 //!
@@ -43,7 +43,7 @@
 //!
 //! ## Example
 //!     use chrono::{DateTime, TimeDelta, Utc};
-//!     use serde_jwt::util::epoch::UtcDateTime;
+//!     use json_web_token::util::epoch::UtcDateTime;
 //!     use serde::{Deserialize, Serialize};
 //!
 //!     #[derive(Deserialize, Serialize)]

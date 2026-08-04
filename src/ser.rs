@@ -7,7 +7,7 @@ pub struct Serializer {
     pub output: String,
 }
 
-impl<'ser> ser::Serializer for &'ser mut Serializer {
+impl ser::Serializer for &mut Serializer {
     type Ok = ();
     type Error = Error;
     type SerializeSeq = Self;
@@ -181,7 +181,7 @@ impl<'ser> ser::Serializer for &'ser mut Serializer {
     }
 }
 
-impl<'ser> ser::SerializeSeq for &'ser mut Serializer {
+impl ser::SerializeSeq for &mut Serializer {
     type Ok = ();
 
     type Error = Error;
@@ -202,7 +202,7 @@ impl<'ser> ser::SerializeSeq for &'ser mut Serializer {
     }
 }
 
-impl<'ser> ser::SerializeMap for &'ser mut Serializer {
+impl ser::SerializeMap for &mut Serializer {
     type Ok = ();
     type Error = Error;
 
@@ -225,7 +225,7 @@ impl<'ser> ser::SerializeMap for &'ser mut Serializer {
     }
 }
 
-impl<'ser> ser::SerializeStruct for &'ser mut Serializer {
+impl ser::SerializeStruct for &mut Serializer {
     type Ok = ();
     type Error = Error;
 
@@ -241,7 +241,7 @@ impl<'ser> ser::SerializeStruct for &'ser mut Serializer {
     }
 }
 
-impl<'ser> ser::SerializeStructVariant for &'ser mut Serializer {
+impl ser::SerializeStructVariant for &mut Serializer {
     type Ok = ();
     type Error = Error;
 
@@ -257,7 +257,7 @@ impl<'ser> ser::SerializeStructVariant for &'ser mut Serializer {
     }
 }
 
-impl<'ser> ser::SerializeTuple for &'ser mut Serializer {
+impl ser::SerializeTuple for &mut Serializer {
     type Ok = ();
 
     type Error = Error;
@@ -278,7 +278,7 @@ impl<'ser> ser::SerializeTuple for &'ser mut Serializer {
     }
 }
 
-impl<'ser> ser::SerializeTupleStruct for &'ser mut Serializer {
+impl ser::SerializeTupleStruct for &mut Serializer {
     type Ok = ();
     type Error = Error;
 
@@ -298,7 +298,7 @@ impl<'ser> ser::SerializeTupleStruct for &'ser mut Serializer {
     }
 }
 
-impl<'ser> ser::SerializeTupleVariant for &'ser mut Serializer {
+impl ser::SerializeTupleVariant for &mut Serializer {
     type Ok = ();
     type Error = Error;
 

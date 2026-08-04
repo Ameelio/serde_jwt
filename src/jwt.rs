@@ -33,13 +33,11 @@ where
     }
 
     pub fn claims(&self) -> &C {
-        let claims = &self.claims;
-        claims
+        &self.claims
     }
 
     pub fn header(&self) -> &H {
-        let header = &self.header;
-        header
+        &self.header
     }
 }
 
