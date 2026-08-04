@@ -1,7 +1,12 @@
 [package]
 name = "json-web-token"
-version = "0.1.0"
+description = "A ser(de) for JWTs, JWS and the basic structs for representing them."
 edition = "2024"
+homepage = "https://github.com/Ameelio/json-web-token/"
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/Ameelio/json-web-token/"
+version = "0.2.0"
 
 [features]
 debug = [
