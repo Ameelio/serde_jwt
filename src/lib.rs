@@ -4,7 +4,7 @@
 //!
 //! ```rust
 //!
-//! use serde_jwt::prelude::*;
+//! use json_web_token::prelude::*;
 //! use serde::Deserialize;
 //! use serde::de::{value, IntoDeserializer};
 //! use std::borrow::Cow;

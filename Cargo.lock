@@ -170,6 +170,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "json-web-token"
+version = "0.1.0"
+dependencies = [
+ "base64ct",
+ "chrono",
+ "hmac",
+ "serde",
+ "serde_json",
+ "serde_test",
+ "sha2",
+ "thiserror",
+ "tracing",
+]
+
+[[package]]
 name = "libc"
 version = "0.2.174"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -268,21 +283,6 @@ dependencies = [
  "memchr",
  "ryu",
  "serde",
-]
-
-[[package]]
-name = "serde_jwt"
-version = "0.1.0"
-dependencies = [
- "base64ct",
- "chrono",
- "hmac",
- "serde",
- "serde_json",
- "serde_test",
- "sha2",
- "thiserror",
- "tracing",
 ]
 
 [[package]]
