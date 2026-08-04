@@ -170,7 +170,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "json-web-token"
+name = "json-web-tolkien"
 version = "0.2.0"
 dependencies = [
  "base64ct",

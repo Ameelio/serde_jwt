@@ -1,11 +1,11 @@
 [package]
-name = "json-web-token"
+name = "json-web-tolkien"
 description = "A ser(de) for JWTs, JWS and the basic structs for representing them."
 edition = "2024"
-homepage = "https://github.com/Ameelio/json-web-token/"
+homepage = "https://github.com/Ameelio/json-web-tolkien/"
 license = "MIT"
 readme = "README.md"
-repository = "https://github.com/Ameelio/json-web-token/"
+repository = "https://github.com/Ameelio/json-web-tolkien/"
 version = "0.2.0"
 
 [features]
