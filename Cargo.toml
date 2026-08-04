@@ -9,6 +9,7 @@ debug = [
 ]
 
 [dependencies]
+thiserror = "2.0.18"
 
 base64ct = { version = "1.8.0", features = ["std"] }
 chrono = { version = "0.4.42", features = ["serde"] }
