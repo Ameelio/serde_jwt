@@ -6,7 +6,6 @@ use std::marker::PhantomData;
 use base64ct::{Base64UrlUnpadded, Encoding};
 use serde::de::IntoDeserializer;
 use serde::de::value::SeqDeserializer;
-use serde::ser::SerializeTuple;
 use serde::{Deserialize, Serialize, de, ser};
 
 use crate::error::Error;
@@ -34,13 +33,11 @@ where
     }
 
     pub fn claims(&self) -> &C {
-        let claims = &self.claims;
-        claims
+        &self.claims
     }
 
     pub fn header(&self) -> &H {
-        let header = &self.header;
-        header
+        &self.header
     }
 }
 
